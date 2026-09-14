@@ -13,7 +13,6 @@
    DESIGN TOKENS · BLUE THEME
    ============================================================ */
 :root {
-  /* Blue palette */
   --blue-950: #04122e;
   --blue-900: #071a3d;
   --blue-800: #0a2455;
@@ -24,29 +23,22 @@
   --blue-300: #60a5fa;
   --blue-200: #93c5fd;
 
-  /* Neutrals */
   --white:    #ffffff;
   --white-95: rgba(255, 255, 255, 0.95);
-  --white-60: rgba(255, 255, 255, 0.60);
-  --white-40: rgba(255, 255, 255, 0.40);
 
-  /* Spacing */
   --s-3: 12px;
   --s-4: 16px;
   --s-5: 24px;
 
-  /* Radius */
   --r-md: 12px;
   --r-lg: 20px;
   --r-full: 999px;
 
-  /* Motion */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --dur: 480ms;
 
-  /* Layout */
   --header-h: clamp(52px, 6vh, 76px);
   --dot-size: clamp(9px, 0.95vh, 13px);
   --dot-active-w: clamp(28px, 3.4vh, 46px);
@@ -155,21 +147,6 @@ button {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: var(--s-5);
-  position: relative;
-}
-
-.header__title::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 55%;
-  background: linear-gradient(180deg, var(--blue-400), var(--blue-600));
-  border-radius: var(--r-full);
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
 }
 
 .icon-btn {
@@ -255,7 +232,7 @@ button {
 }
 
 /* ============================================================
-   SLIDE · media full area
+   SLIDE
    ============================================================ */
 .slide {
   position: absolute;
@@ -300,7 +277,7 @@ button {
 }
 
 /* ============================================================
-   DOTS · satu-satunya kontrol visual
+   DOTS
    ============================================================ */
 .dots {
   position: absolute;
@@ -324,13 +301,11 @@ button {
   pointer-events: auto;
   transition:
     opacity 300ms var(--ease),
-    transform 300ms var(--ease),
-    pointer-events 0s;
+    transform 300ms var(--ease);
 }
 
 .stage:hover .dots { opacity: 1; }
 
-/* Auto-hide dots saat video sedang diputar */
 .stage.is-playing .dots {
   opacity: 0;
   pointer-events: none;
@@ -452,7 +427,6 @@ button {
   (() => {
     'use strict';
 
-    /* ---------- DOM refs ---------- */
     const $ = (sel) => document.querySelector(sel);
 
     const stage   = $('#stage');
@@ -490,15 +464,12 @@ button {
       const v = slide?.querySelector('video');
       if (!v) return;
 
-      // Reset ke awal
       try { v.currentTime = 0; } catch (_) {}
 
-      // Sinkronkan class "is-playing" pada stage
       v.addEventListener('play',  () => stage.classList.add('is-playing'));
       v.addEventListener('pause', () => stage.classList.remove('is-playing'));
       v.addEventListener('ended', () => stage.classList.remove('is-playing'));
 
-      // Coba play (bisa diblokir kalau belum ada interaksi user)
       const p = v.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
     }
@@ -535,7 +506,6 @@ button {
 
     /* ---------- Keyboard ---------- */
     function onKeydown(e) {
-      // Jangan intercept kalau fokus di video/input
       const tag = document.activeElement?.tagName;
       if (tag === 'VIDEO' || tag === 'INPUT' || tag === 'TEXTAREA') return;
 
@@ -574,11 +544,9 @@ button {
       stage.addEventListener('touchstart', onTouchStart, { passive: true });
       stage.addEventListener('touchend',   onTouchEnd,   { passive: true });
 
-      // Autoplay video slide pertama (kalau slide 1 = video)
       playVideo(slides[current]);
     }
 
-    // Jalankan setelah DOM siap
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
