@@ -36,12 +36,10 @@
 
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --dur: 480ms;
 
   --header-h: clamp(52px, 6vh, 76px);
-  --dot-size: clamp(9px, 0.95vh, 13px);
-  --dot-active-w: clamp(28px, 3.4vh, 46px);
+  --nav-size: clamp(48px, 5.6vh, 76px);
   --pad-x: clamp(20px, 2.4vw, 48px);
 }
 
@@ -129,7 +127,7 @@ button {
 }
 
 .brand__name {
-  font-size: clamp(16px, 1.05vw, 17px);
+  font-size: clamp(12px, 1.05vw, 17px);
   font-weight: 600;
   color: var(--white-95);
   letter-spacing: 0.005em;
@@ -215,7 +213,10 @@ button {
     0 24px 64px rgba(0, 0, 0, 0.7);
   isolation: isolate;
   z-index: 1;
+  cursor: none;   /* kursor disembunyikan saat UI hidden */
 }
+
+.stage.show-ui { cursor: default; }
 
 .stage::after {
   content: '';
@@ -232,7 +233,7 @@ button {
 }
 
 /* ============================================================
-   SLIDE
+   SLIDE · media full area
    ============================================================ */
 .slide {
   position: absolute;
@@ -269,6 +270,7 @@ button {
   object-position: center;
   display: block;
   background: #000;
+  cursor: default;   /* kursor tetap terlihat saat hover video */
 }
 
 .slide--cover img,
@@ -277,64 +279,73 @@ button {
 }
 
 /* ============================================================
-   DOTS
+   NAV BUTTONS · auto-hide
    ============================================================ */
-.dots {
+.nav-btn {
   position: absolute;
-  bottom: clamp(16px, 2.4vh, 28px);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: clamp(8px, 0.9vw, 12px);
-  padding: clamp(8px, 1vh, 12px) clamp(16px, 1.6vw, 24px);
+  top: 50%;
+  width: var(--nav-size);
+  height: var(--nav-size);
   border-radius: var(--r-full);
-  background: rgba(10, 36, 85, 0.55);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(59, 130, 246, 0.22);
+  display: grid;
+  place-items: center;
+  background: rgba(10, 36, 85, 0.6);
+  color: var(--white-95);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   box-shadow:
-    0 8px 28px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  z-index: 15;
-  opacity: 0.55;
-  pointer-events: auto;
-  transition:
-    opacity 300ms var(--ease),
-    transform 300ms var(--ease);
-}
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  z-index: 20;
+  cursor: pointer;
 
-.stage:hover .dots { opacity: 1; }
-
-.stage.is-playing .dots {
+  /* Hidden default */
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-50%) translateY(10px);
-}
+  transform: translateY(-50%) scale(0.9);
 
-.dot {
-  width: var(--dot-size);
-  height: var(--dot-size);
-  border-radius: var(--r-full);
-  background: rgba(147, 197, 253, 0.35);
-  padding: 0;
   transition:
-    width 420ms var(--spring),
-    background 220ms var(--ease),
-    box-shadow 220ms var(--ease);
-  touch-action: manipulation;
+    opacity 260ms var(--ease),
+    transform 260ms var(--ease-out),
+    background 200ms var(--ease),
+    box-shadow 220ms var(--ease),
+    border-color 200ms var(--ease);
 }
 
-.dot:hover:not(.is-active) {
-  background: rgba(147, 197, 253, 0.75);
+.nav-btn svg {
+  width: 42%;
+  height: 42%;
 }
 
-.dot.is-active {
-  width: var(--dot-active-w);
-  background: linear-gradient(90deg, var(--blue-300), var(--blue-400));
+.nav-btn--prev { left: clamp(12px, 1.6vw, 28px); }
+.nav-btn--next { right: clamp(12px, 1.6vw, 28px); }
+
+/* Visible saat .stage.show-ui */
+.stage.show-ui .nav-btn {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+  border-color: rgba(147, 197, 253, 0.5);
   box-shadow:
-    0 0 14px rgba(96, 165, 250, 0.7),
-    0 0 28px rgba(59, 130, 246, 0.35);
+    0 12px 36px rgba(30, 95, 212, 0.55),
+    0 0 0 1px rgba(147, 197, 253, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.nav-btn:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.94);
+  transition-duration: 100ms;
+}
+
+.nav-btn:disabled {
+  opacity: 0.15 !important;
+  cursor: not-allowed;
 }
 
 /* ============================================================
@@ -368,7 +379,7 @@ button {
   <header class="header">
     <div class="brand">
       <img class="brand__logo" src="assets/logo-sd.png" alt="Logo SD Negeri 1 Godegan">
-      <span class="brand__name">SD NEGERI 1 GODEGAN</span>
+      <span class="brand__name">SD Negeri 1 Godegan</span>
     </div>
 
     <h1 class="header__title">BIMTEK Digitalisasi Pembelajaran</h1>
@@ -416,8 +427,20 @@ button {
         <img src="assets/img/slide-5.jpg" alt="Slide 5">
       </div>
 
-      <!-- Dots overlay -->
-      <div class="dots" id="dots" role="tablist" aria-label="Navigasi slide"></div>
+      <!-- Tombol navigasi overlay (auto-hide) -->
+      <button class="nav-btn nav-btn--prev" id="btn-prev" aria-label="Slide sebelumnya">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+
+      <button class="nav-btn nav-btn--next" id="btn-next" aria-label="Slide berikutnya">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
 
     </div>
   </main>
@@ -430,31 +453,42 @@ button {
     const $ = (sel) => document.querySelector(sel);
 
     const stage   = $('#stage');
-    const dotsBox = $('#dots');
     const fsBtn   = $('#btn-fullscreen');
+    const prevBtn = $('#btn-prev');
+    const nextBtn = $('#btn-next');
     const slides  = Array.from(document.querySelectorAll('.slide'));
     const total   = slides.length;
 
     let current = 0;
-    let dots    = [];
 
-    /* ---------- Build dots ---------- */
-    function buildDots() {
-      const frag = document.createDocumentFragment();
-      slides.forEach((_, i) => {
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'dot' + (i === 0 ? ' is-active' : '');
-        dot.setAttribute('role', 'tab');
-        dot.setAttribute('aria-label', `Slide ${i + 1}`);
-        dot.addEventListener('click', () => goTo(i));
-        frag.appendChild(dot);
-      });
-      dotsBox.appendChild(frag);
-      dots = Array.from(dotsBox.querySelectorAll('.dot'));
+    /* ============================================================
+       AUTO-HIDE UI
+       ============================================================ */
+    const HIDE_DELAY = 2000;    // ms
+    let hideTimer = null;
+
+    function clearHideTimer() {
+      if (hideTimer) {
+        clearTimeout(hideTimer);
+        hideTimer = null;
+      }
     }
 
-    /* ---------- Video lifecycle ---------- */
+    function scheduleHide(delay = HIDE_DELAY) {
+      clearHideTimer();
+      hideTimer = setTimeout(() => {
+        stage.classList.remove('show-ui');
+      }, delay);
+    }
+
+    function showUI(delay = HIDE_DELAY) {
+      stage.classList.add('show-ui');
+      scheduleHide(delay);
+    }
+
+    /* ============================================================
+       VIDEO LIFECYCLE
+       ============================================================ */
     function pauseVideo(slide) {
       const v = slide?.querySelector('video');
       if (v && !v.paused) v.pause();
@@ -466,36 +500,37 @@ button {
 
       try { v.currentTime = 0; } catch (_) {}
 
-      v.addEventListener('play',  () => stage.classList.add('is-playing'));
-      v.addEventListener('pause', () => stage.classList.remove('is-playing'));
-      v.addEventListener('ended', () => stage.classList.remove('is-playing'));
-
       const p = v.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
     }
 
-    /* ---------- Navigation ---------- */
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+    function syncButtons() {
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+    }
+
     function goTo(index) {
       if (index < 0 || index >= total || index === current) return;
 
       pauseVideo(slides[current]);
-      stage.classList.remove('is-playing');
 
       slides[current].classList.remove('is-active');
-      dots[current].classList.remove('is-active');
-
       current = index;
-
       slides[current].classList.add('is-active');
-      dots[current].classList.add('is-active');
 
       playVideo(slides[current]);
+      syncButtons();
     }
 
     const prev = () => goTo(current - 1);
     const next = () => goTo(current + 1);
 
-    /* ---------- Fullscreen ---------- */
+    /* ============================================================
+       FULLSCREEN
+       ============================================================ */
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen?.().catch(() => {});
@@ -504,47 +539,77 @@ button {
       }
     }
 
-    /* ---------- Keyboard ---------- */
-    function onKeydown(e) {
+    /* ============================================================
+       EVENTS
+       ============================================================ */
+
+    // Mousemove — throttle biar tidak spam
+    let lastMove = 0;
+    stage.addEventListener('mousemove', () => {
+      const now = performance.now();
+      if (now - lastMove < 80) return;
+      lastMove = now;
+      showUI();
+    }, { passive: true });
+
+    // Touch — show lebih lama
+    stage.addEventListener('touchstart', () => {
+      showUI(2500);
+    }, { passive: true });
+
+    // Keyboard — brief show
+    document.addEventListener('keydown', (e) => {
       const tag = document.activeElement?.tagName;
       if (tag === 'VIDEO' || tag === 'INPUT' || tag === 'TEXTAREA') return;
 
       switch (e.key) {
-        case 'ArrowLeft':  prev(); break;
-        case 'ArrowRight': next(); break;
+        case 'ArrowLeft':  prev(); showUI(1500); break;
+        case 'ArrowRight': next(); showUI(1500); break;
         case 'f':
         case 'F':          toggleFullscreen(); break;
       }
-    }
+    });
 
-    /* ---------- Touch swipe ---------- */
+    // Tombol prev/next — jaga UI tetap tampil saat hover
+    [prevBtn, nextBtn].forEach((btn) => {
+      btn.addEventListener('mouseenter', clearHideTimer);
+      btn.addEventListener('mouseleave', () => scheduleHide(1200));
+      btn.addEventListener('click', () => {
+        btn === prevBtn ? prev() : next();
+        scheduleHide(1500);
+      });
+    });
+
+    // Fullscreen button — tetap tampil saat hover area header? Tidak perlu,
+    // tapi header tidak dalam stage jadi UI tidak terpengaruh.
+
+    // Swipe
     let startX = 0, startY = 0;
-
-    function onTouchStart(e) {
+    stage.addEventListener('touchstart', (e) => {
       const t = e.changedTouches[0];
       startX = t.screenX;
       startY = t.screenY;
-    }
+    }, { passive: true });
 
-    function onTouchEnd(e) {
+    stage.addEventListener('touchend', (e) => {
       const dx = e.changedTouches[0].screenX - startX;
       const dy = e.changedTouches[0].screenY - startY;
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
         dx > 0 ? prev() : next();
+        showUI(1500);
       }
-    }
+    }, { passive: true });
 
-    /* ---------- Init ---------- */
+    fsBtn.addEventListener('click', toggleFullscreen);
+
+    /* ============================================================
+       INIT
+       ============================================================ */
     function init() {
-      buildDots();
-
-      fsBtn.addEventListener('click', toggleFullscreen);
-      document.addEventListener('keydown', onKeydown);
-
-      stage.addEventListener('touchstart', onTouchStart, { passive: true });
-      stage.addEventListener('touchend',   onTouchEnd,   { passive: true });
-
+      syncButtons();
       playVideo(slides[current]);
+      // Tampilkan UI sekali di awal biar user tahu ada tombol
+      showUI(2500);
     }
 
     if (document.readyState === 'loading') {
