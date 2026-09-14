@@ -213,7 +213,7 @@ button {
     0 24px 64px rgba(0, 0, 0, 0.7);
   isolation: isolate;
   z-index: 1;
-  cursor: none;   /* kursor disembunyikan saat UI hidden */
+  cursor: none;
 }
 
 .stage.show-ui { cursor: default; }
@@ -233,7 +233,7 @@ button {
 }
 
 /* ============================================================
-   SLIDE · media full area
+   SLIDE
    ============================================================ */
 .slide {
   position: absolute;
@@ -270,7 +270,7 @@ button {
   object-position: center;
   display: block;
   background: #000;
-  cursor: default;   /* kursor tetap terlihat saat hover video */
+  cursor: default;
 }
 
 .slide--cover img,
@@ -279,7 +279,7 @@ button {
 }
 
 /* ============================================================
-   NAV BUTTONS · auto-hide
+   NAV BUTTONS · auto-hide + fix disabled
    ============================================================ */
 .nav-btn {
   position: absolute;
@@ -343,9 +343,11 @@ button {
   transition-duration: 100ms;
 }
 
+/* Disabled = benar-benar tidak terlihat */
 .nav-btn:disabled {
-  opacity: 0.15 !important;
-  cursor: not-allowed;
+  opacity: 0 !important;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 /* ============================================================
@@ -464,7 +466,7 @@ button {
     /* ============================================================
        AUTO-HIDE UI
        ============================================================ */
-    const HIDE_DELAY = 2000;    // ms
+    const HIDE_DELAY = 2000;
     let hideTimer = null;
 
     function clearHideTimer() {
@@ -543,7 +545,7 @@ button {
        EVENTS
        ============================================================ */
 
-    // Mousemove — throttle biar tidak spam
+    // Mousemove — throttle
     let lastMove = 0;
     stage.addEventListener('mousemove', () => {
       const now = performance.now();
@@ -552,12 +554,12 @@ button {
       showUI();
     }, { passive: true });
 
-    // Touch — show lebih lama
+    // Touch
     stage.addEventListener('touchstart', () => {
       showUI(2500);
     }, { passive: true });
 
-    // Keyboard — brief show
+    // Keyboard
     document.addEventListener('keydown', (e) => {
       const tag = document.activeElement?.tagName;
       if (tag === 'VIDEO' || tag === 'INPUT' || tag === 'TEXTAREA') return;
@@ -570,7 +572,7 @@ button {
       }
     });
 
-    // Tombol prev/next — jaga UI tetap tampil saat hover
+    // Tombol prev/next — pause hide saat hover
     [prevBtn, nextBtn].forEach((btn) => {
       btn.addEventListener('mouseenter', clearHideTimer);
       btn.addEventListener('mouseleave', () => scheduleHide(1200));
@@ -579,9 +581,6 @@ button {
         scheduleHide(1500);
       });
     });
-
-    // Fullscreen button — tetap tampil saat hover area header? Tidak perlu,
-    // tapi header tidak dalam stage jadi UI tidak terpengaruh.
 
     // Swipe
     let startX = 0, startY = 0;
@@ -608,8 +607,8 @@ button {
     function init() {
       syncButtons();
       playVideo(slides[current]);
-      // Tampilkan UI sekali di awal biar user tahu ada tombol
-      showUI(2500);
+      // Tidak auto-show — biar bersih saat load pertama.
+      // UI muncul hanya saat mouse bergerak / touch / keyboard.
     }
 
     if (document.readyState === 'loading') {
