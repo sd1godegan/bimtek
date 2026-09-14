@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#04122e">
+<meta name="color-scheme" content="dark">
+<title>BIMTEK Digitalisasi Pembelajaran — SD Negeri 1 Godegan</title>
+
+<style>
+/* ============================================================
+   DESIGN TOKENS · BLUE THEME
+   ============================================================ */
+:root {
+  /* Blue palette */
+  --blue-950: #04122e;
+  --blue-900: #071a3d;
+  --blue-800: #0a2455;
+  --blue-700: #0e3075;
+  --blue-600: #1544a1;
+  --blue-500: #1e5fd4;
+  --blue-400: #3b82f6;
+  --blue-300: #60a5fa;
+  --blue-200: #93c5fd;
+
+  /* Neutrals */
+  --white:    #ffffff;
+  --white-95: rgba(255, 255, 255, 0.95);
+  --white-60: rgba(255, 255, 255, 0.60);
+  --white-40: rgba(255, 255, 255, 0.40);
+
+  /* Spacing */
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+
+  /* Radius */
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-full: 999px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur: 480ms;
+
+  /* Layout */
+  --header-h: clamp(52px, 6vh, 76px);
+  --dot-size: clamp(9px, 0.95vh, 13px);
+  --dot-active-w: clamp(28px, 3.4vh, 46px);
+  --pad-x: clamp(20px, 2.4vw, 48px);
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+  background: var(--blue-950);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  padding: 0 var(--pad-x);
+  background: linear-gradient(180deg, var(--blue-900) 0%, var(--blue-950) 100%);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.18);
+  flex-shrink: 0;
+  z-index: 10;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(59, 130, 246, 0.65) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.brand__logo {
+  height: calc(var(--header-h) * 0.64);
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(30, 95, 212, 0.4));
+}
+
+.brand__name {
+  font-size: clamp(12px, 1.05vw, 17px);
+  font-weight: 600;
+  color: var(--white-95);
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+}
+
+.header__title {
+  flex: 1;
+  text-align: right;
+  font-size: clamp(11px, 0.95vw, 16px);
+  font-weight: 700;
+  color: var(--blue-200);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: var(--s-5);
+  position: relative;
+}
+
+.header__title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 55%;
+  background: linear-gradient(180deg, var(--blue-400), var(--blue-600));
+  border-radius: var(--r-full);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+}
+
+.icon-btn {
+  flex-shrink: 0;
+  width: calc(var(--header-h) * 0.58);
+  height: calc(var(--header-h) * 0.58);
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+  color: var(--blue-200);
+  background: transparent;
+  transition: background 180ms var(--ease), color 180ms var(--ease), transform 120ms var(--ease);
+  touch-action: manipulation;
+}
+
+.icon-btn svg { width: 46%; height: 46%; }
+
+.icon-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--white);
+}
+
+.icon-btn:active {
+  background: rgba(59, 130, 246, 0.25);
+  transform: scale(0.94);
+}
+
+/* ============================================================
+   MAIN / STAGE
+   ============================================================ */
+.main {
+  flex: 1;
+  padding: var(--s-3) var(--s-3) var(--s-4);
+  display: flex;
+  min-height: 0;
+  background: var(--blue-950);
+  position: relative;
+}
+
+.main::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(30, 95, 212, 0.18) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  background: #000;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.15),
+    0 0 0 4px rgba(30, 95, 212, 0.08),
+    0 24px 64px rgba(0, 0, 0, 0.7);
+  isolation: isolate;
+  z-index: 1;
+}
+
+.stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.55;
+}
+
+/* ============================================================
+   SLIDE · media full area
+   ============================================================ */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.985);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    visibility 0s linear var(--dur);
+  will-change: opacity, transform;
+  z-index: 1;
+}
+
+.slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    visibility 0s;
+}
+
+.slide img,
+.slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  background: #000;
+}
+
+.slide--cover img,
+.slide--cover video {
+  object-fit: cover;
+}
+
+/* ============================================================
+   DOTS · satu-satunya kontrol visual
+   ============================================================ */
+.dots {
+  position: absolute;
+  bottom: clamp(16px, 2.4vh, 28px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 0.9vw, 12px);
+  padding: clamp(8px, 1vh, 12px) clamp(16px, 1.6vw, 24px);
+  border-radius: var(--r-full);
+  background: rgba(10, 36, 85, 0.55);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(59, 130, 246, 0.22);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  z-index: 15;
+  opacity: 0.55;
+  pointer-events: auto;
+  transition:
+    opacity 300ms var(--ease),
+    transform 300ms var(--ease),
+    pointer-events 0s;
+}
+
+.stage:hover .dots { opacity: 1; }
+
+/* Auto-hide dots saat video sedang diputar */
+.stage.is-playing .dots {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(10px);
+}
+
+.dot {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: var(--r-full);
+  background: rgba(147, 197, 253, 0.35);
+  padding: 0;
+  transition:
+    width 420ms var(--spring),
+    background 220ms var(--ease),
+    box-shadow 220ms var(--ease);
+  touch-action: manipulation;
+}
+
+.dot:hover:not(.is-active) {
+  background: rgba(147, 197, 253, 0.75);
+}
+
+.dot.is-active {
+  width: var(--dot-active-w);
+  background: linear-gradient(90deg, var(--blue-300), var(--blue-400));
+  box-shadow:
+    0 0 14px rgba(96, 165, 250, 0.7),
+    0 0 28px rgba(59, 130, 246, 0.35);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 720px) {
+  .header__title { display: none; }
+  .brand__name { font-size: 12px; }
+  :root {
+    --pad-x: 16px;
+    --s-5: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand__name { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="header">
+    <div class="brand">
+      <img class="brand__logo" src="assets/logo-sd.png" alt="Logo SD Negeri 1 Godegan">
+      <span class="brand__name">SD Negeri 1 Godegan</span>
+    </div>
+
+    <h1 class="header__title">BIMTEK Digitalisasi Pembelajaran</h1>
+
+    <button class="icon-btn" id="btn-fullscreen" aria-label="Layar penuh" title="Layar penuh (F)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+      </svg>
+    </button>
+  </header>
+
+  <!-- ================= SLIDE STAGE ================= -->
+  <main class="main">
+    <div class="stage" id="stage">
+
+      <!-- Slide 1 · Gambar -->
+      <div class="slide is-active">
+        <img src="assets/img/slide-1.jpg" alt="Slide 1">
+      </div>
+
+      <!-- Slide 2 · Video Indonesia Raya -->
+      <div class="slide">
+        <video src="assets/video/indonesia-raya.mp4"
+               controls playsinline preload="metadata">
+          Browser tidak mendukung pemutar video.
+        </video>
+      </div>
+
+      <!-- Slide 3 · Gambar -->
+      <div class="slide">
+        <img src="assets/img/slide-3.jpg" alt="Slide 3">
+      </div>
+
+      <!-- Slide 4 · Video Bagimu Negeri -->
+      <div class="slide">
+        <video src="assets/video/bagimu-negeri.mp4"
+               controls playsinline preload="metadata">
+          Browser tidak mendukung pemutar video.
+        </video>
+      </div>
+
+      <!-- Slide 5 · Gambar -->
+      <div class="slide">
+        <img src="assets/img/slide-5.jpg" alt="Slide 5">
+      </div>
+
+      <!-- Dots overlay -->
+      <div class="dots" id="dots" role="tablist" aria-label="Navigasi slide"></div>
+
+    </div>
+  </main>
+
+  <!-- ================= SCRIPT ================= -->
+  <script>
+  (() => {
+    'use strict';
+
+    /* ---------- DOM refs ---------- */
+    const $ = (sel) => document.querySelector(sel);
+
+    const stage   = $('#stage');
+    const dotsBox = $('#dots');
+    const fsBtn   = $('#btn-fullscreen');
+    const slides  = Array.from(document.querySelectorAll('.slide'));
+    const total   = slides.length;
+
+    let current = 0;
+    let dots    = [];
+
+    /* ---------- Build dots ---------- */
+    function buildDots() {
+      const frag = document.createDocumentFragment();
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'dot' + (i === 0 ? ' is-active' : '');
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', `Slide ${i + 1}`);
+        dot.addEventListener('click', () => goTo(i));
+        frag.appendChild(dot);
+      });
+      dotsBox.appendChild(frag);
+      dots = Array.from(dotsBox.querySelectorAll('.dot'));
+    }
+
+    /* ---------- Video lifecycle ---------- */
+    function pauseVideo(slide) {
+      const v = slide?.querySelector('video');
+      if (v && !v.paused) v.pause();
+    }
+
+    function playVideo(slide) {
+      const v = slide?.querySelector('video');
+      if (!v) return;
+
+      // Reset ke awal
+      try { v.currentTime = 0; } catch (_) {}
+
+      // Sinkronkan class "is-playing" pada stage
+      v.addEventListener('play',  () => stage.classList.add('is-playing'));
+      v.addEventListener('pause', () => stage.classList.remove('is-playing'));
+      v.addEventListener('ended', () => stage.classList.remove('is-playing'));
+
+      // Coba play (bisa diblokir kalau belum ada interaksi user)
+      const p = v.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    }
+
+    /* ---------- Navigation ---------- */
+    function goTo(index) {
+      if (index < 0 || index >= total || index === current) return;
+
+      pauseVideo(slides[current]);
+      stage.classList.remove('is-playing');
+
+      slides[current].classList.remove('is-active');
+      dots[current].classList.remove('is-active');
+
+      current = index;
+
+      slides[current].classList.add('is-active');
+      dots[current].classList.add('is-active');
+
+      playVideo(slides[current]);
+    }
+
+    const prev = () => goTo(current - 1);
+    const next = () => goTo(current + 1);
+
+    /* ---------- Fullscreen ---------- */
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.().catch(() => {});
+      } else {
+        document.exitFullscreen?.();
+      }
+    }
+
+    /* ---------- Keyboard ---------- */
+    function onKeydown(e) {
+      // Jangan intercept kalau fokus di video/input
+      const tag = document.activeElement?.tagName;
+      if (tag === 'VIDEO' || tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+      switch (e.key) {
+        case 'ArrowLeft':  prev(); break;
+        case 'ArrowRight': next(); break;
+        case 'f':
+        case 'F':          toggleFullscreen(); break;
+      }
+    }
+
+    /* ---------- Touch swipe ---------- */
+    let startX = 0, startY = 0;
+
+    function onTouchStart(e) {
+      const t = e.changedTouches[0];
+      startX = t.screenX;
+      startY = t.screenY;
+    }
+
+    function onTouchEnd(e) {
+      const dx = e.changedTouches[0].screenX - startX;
+      const dy = e.changedTouches[0].screenY - startY;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+        dx > 0 ? prev() : next();
+      }
+    }
+
+    /* ---------- Init ---------- */
+    function init() {
+      buildDots();
+
+      fsBtn.addEventListener('click', toggleFullscreen);
+      document.addEventListener('keydown', onKeydown);
+
+      stage.addEventListener('touchstart', onTouchStart, { passive: true });
+      stage.addEventListener('touchend',   onTouchEnd,   { passive: true });
+
+      // Autoplay video slide pertama (kalau slide 1 = video)
+      playVideo(slides[current]);
+    }
+
+    // Jalankan setelah DOM siap
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
+
+</body>
+</html>
